@@ -6,16 +6,16 @@ import { UpdateEmployeeInput } from './dto/update-employee.input';
 
 @Resolver(() => Employee)
 export class EmployeeResolver {
-  constructor(private readonly employeeService: EmployeeService) {}
+  constructor(private readonly employeeService: EmployeeService) { }
 
-  @Mutation(() => Employee)
+  @Mutation(() => Employee, { name: 'createEmployee' })
   createEmployee(@Args('createEmployeeInput') createEmployeeInput: CreateEmployeeInput) {
     return this.employeeService.create(createEmployeeInput);
   }
 
-  @Query(() => [Employee], { name: 'employee' })
-  findAll() {
-    return this.employeeService.findAll();
+  @Query(() => [Employee], { name: 'employees' })
+  async findAll(): Promise<Employee[]> {
+    return await this.employeeService.findAll();
   }
 
   @Query(() => Employee, { name: 'employee' })
@@ -23,12 +23,12 @@ export class EmployeeResolver {
     return this.employeeService.findOne(id);
   }
 
-  @Mutation(() => Employee)
+  @Mutation(() => Employee, { name: 'updateEmployee' })
   updateEmployee(@Args('updateEmployeeInput') updateEmployeeInput: UpdateEmployeeInput) {
     return this.employeeService.update(updateEmployeeInput.id, updateEmployeeInput);
   }
 
-  @Mutation(() => Employee)
+  @Mutation(() => Employee, { name: 'removeEmployee' })
   removeEmployee(@Args('id', { type: () => Int }) id: number) {
     return this.employeeService.remove(id);
   }
